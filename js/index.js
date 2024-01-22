@@ -326,8 +326,12 @@ function init(wrapper) {
   var i,
     len,
     ghost,
-    blockSize = wrapper.offsetWidth / 19,
+    blockSize = wrapper.offsetWidth / (Pacman.MAP[0].length - 2),
     canvas = document.createElement("canvas");
+
+  if (blockSize * (Pacman.MAP.length + 2) > window.innerHeight) {
+    blockSize = window.innerHeight / (Pacman.MAP.length + 2);
+  }
 
   canvas.setAttribute("width", blockSize * Pacman.MAP[0].length + "px");
   canvas.setAttribute(
