@@ -12,19 +12,19 @@ var state = WAITING,
   ghosts = [],
   ghostSpecs = [
     {
-      // img: "../img/ghost_1.png",
+      // img: "./img/ghost_1.png",
       home: { x: 1, y: 1 },
     },
     // {
-    // img: "../img/ghost_2.png",
+    // img: "./img/ghost_2.png",
     //   home: { x: 17, y: 1 },
     // },
     // {
-    // img: "../img/ghost_3.png",
+    // img: "./img/ghost_3.png",
     //   home: { x: 1, y: 7 },
     // },
     {
-      img: "../img/ghost_4.png",
+      img: "./img/ghost_4.png",
       home: { x: 17, y: 7 },
     },
   ],
