@@ -4,17 +4,45 @@ Pacman.EMPTY = 2;
 Pacman.BLOCK = 3;
 Pacman.PILL = 4;
 
+Pacman.ANSWER_A = 5;
+Pacman.ANSWER_B = 6;
+Pacman.ANSWER_C = 7;
+Pacman.ANSWER_D = 8;
+Pacman.ANSWER_E = 9;
+
 Pacman.MAP = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 6, 1, 1, 1, 1, 0],
   [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
   [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
   [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 0],
+  [0, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 1, 1, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
+
+// Pacman.totalFood = Pacman.MAP.reduce((acc, row) => {
+//   return (
+//     acc +
+//     row.reduce((acc, cell) => {
+//       return (
+//         acc +
+//         ([
+//           Pacman.BISCUIT,
+//           Pacman.PILL,
+//           Pacman.ANSWER_A,
+//           Pacman.ANSWER_B,
+//           Pacman.ANSWER_C,
+//           Pacman.ANSWER_D,
+//           Pacman.ANSWER_E,
+//         ].includes(cell)
+//           ? 1
+//           : 0)
+//       );
+//     }, 0)
+//   );
+// }, 0);
 
 function generateWallsFromMap(map) {
   const walls = [];
@@ -80,11 +108,16 @@ Pacman.Map = function (size) {
       return false;
     }
     var peice = map[pos.y][pos.x];
-    return (
-      peice === Pacman.EMPTY ||
-      peice === Pacman.BISCUIT ||
-      peice === Pacman.PILL
-    );
+    return [
+      Pacman.EMPTY,
+      Pacman.BISCUIT,
+      Pacman.PILL,
+      Pacman.ANSWER_A,
+      Pacman.ANSWER_B,
+      Pacman.ANSWER_C,
+      Pacman.ANSWER_D,
+      Pacman.ANSWER_E,
+    ].includes(peice);
   }
 
   function drawWall(ctx) {
@@ -161,6 +194,48 @@ Pacman.Map = function (size) {
     }
   }
 
+  function drawAnswer(ctx) {
+    if (++pillSize > 30) {
+      pillSize = 0;
+    }
+
+    for (i = 0; i < height; i += 1) {
+      for (j = 0; j < width; j += 1) {
+        if (
+          [
+            Pacman.ANSWER_A,
+            Pacman.ANSWER_B,
+            Pacman.ANSWER_C,
+            Pacman.ANSWER_D,
+            Pacman.ANSWER_E,
+          ].includes(map[i][j])
+        ) {
+          ctx.beginPath();
+
+          ctx.fillStyle = "#000";
+          ctx.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
+
+          // generate random color
+          ctx.fillStyle =
+            "#" +
+            Math.floor(
+              16777215 * (i / Pacman.MAP[0].length) * (j / Pacman.MAP.length)
+            ).toString(16);
+          ctx.arc(
+            j * blockSize + blockSize / 2,
+            i * blockSize + blockSize / 2,
+            Math.abs(5 - pillSize / 3),
+            0,
+            Math.PI * 2,
+            false
+          );
+          ctx.fill();
+          ctx.closePath();
+        }
+      }
+    }
+  }
+
   function draw(ctx) {
     var i,
       j,
@@ -181,17 +256,22 @@ Pacman.Map = function (size) {
   function drawBlock(y, x, ctx) {
     var layout = map[y][x];
 
-    if (layout === Pacman.PILL) {
+    if (
+      [
+        Pacman.PILL,
+        Pacman.ANSWER_A,
+        Pacman.ANSWER_B,
+        Pacman.ANSWER_C,
+        Pacman.ANSWER_D,
+        Pacman.ANSWER_E,
+      ].includes(layout)
+    ) {
       return;
     }
 
     ctx.beginPath();
 
-    if (
-      layout === Pacman.EMPTY ||
-      layout === Pacman.BLOCK ||
-      layout === Pacman.BISCUIT
-    ) {
+    if ([Pacman.EMPTY, Pacman.BLOCK, Pacman.BISCUIT].includes(layout)) {
       ctx.fillStyle = "#000";
       ctx.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
 
@@ -214,6 +294,7 @@ Pacman.Map = function (size) {
     draw: draw,
     drawBlock: drawBlock,
     drawPills: drawPills,
+    drawAnswer: drawAnswer,
     block: block,
     setBlock: setBlock,
     reset: reset,

@@ -15,14 +15,14 @@ var state = WAITING,
       colour: "#00FFDE",
       home: { x: 1, y: 1 },
     },
-    {
-      colour: "#FF0000",
-      home: { x: 17, y: 1 },
-    },
-    {
-      colour: "#FFB8DE",
-      home: { x: 1, y: 7 },
-    },
+    // {
+    //   colour: "#FF0000",
+    //   home: { x: 17, y: 1 },
+    // },
+    // {
+    //   colour: "#FFB8DE",
+    //   home: { x: 1, y: 7 },
+    // },
     {
       colour: "#FFB847",
       home: { x: 17, y: 7 },
@@ -259,6 +259,7 @@ function mainLoop() {
   }
 
   map.drawPills(ctx);
+  map.drawAnswer(ctx);
 
   if (state === PLAYING) {
     mainDraw();
@@ -301,9 +302,9 @@ function mainLoop() {
 function eatenPill() {
   timerStart = tick;
   eatenCount = 0;
-  for (i = 0; i < ghosts.length; i += 1) {
-    ghosts[i].makeEatable(ctx);
-  }
+  // for (i = 0; i < ghosts.length; i += 1) {
+  //   ghosts[i].makeEatable(ctx);
+  // }
 }
 
 function completedLevel() {

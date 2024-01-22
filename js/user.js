@@ -152,17 +152,29 @@ Pacman.User = function (game, map, homePos) {
     block = map.block(nextWhole);
 
     if (
-      ((isMidSquare(position.y) || isMidSquare(position.x)) &&
-        block === Pacman.BISCUIT) ||
-      block === Pacman.PILL
+      (isMidSquare(position.y) || isMidSquare(position.x)) &&
+      [
+        Pacman.BISCUIT,
+        Pacman.PILL,
+        Pacman.ANSWER_A,
+        Pacman.ANSWER_B,
+        Pacman.ANSWER_C,
+        Pacman.ANSWER_D,
+        Pacman.ANSWER_E,
+      ].includes(block)
     ) {
       map.setBlock(nextWhole, Pacman.EMPTY);
       addScore(block === Pacman.BISCUIT ? 10 : 50);
       eaten += 1;
 
-      if (eaten === 182) {
-        game.completedLevel();
-      }
+      // const totalFood = Pacman.totalFood;
+      // if (eaten === totalFood) {
+      //   game.completedLevel();
+      // }
+
+      // When eaten all correct answers, game is completed
+
+      // When eaten a wrong answer, game is over
 
       if (block === Pacman.PILL) {
         game.eatenPill();
