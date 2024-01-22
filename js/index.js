@@ -44,7 +44,13 @@ var state = WAITING,
   stored = null,
   xDown = null,
   yDown = null,
-  evt = null;
+  evt = null,
+  keyMap = {
+    37: LEFT,
+    38: UP,
+    39: RIGHT,
+    40: DOWN,
+  };
 
 function getTick() {
   return tick;
@@ -96,7 +102,7 @@ function keyDown(e) {
     map.draw(ctx);
     dialog("Paused");
   } else if (state !== PAUSE) {
-    return user.keyDown(e);
+    return user.keyDown(keyMap[e.keyCode], e);
   }
   return true;
 }
@@ -119,32 +125,28 @@ function handleTouchMove(evt) {
   var xDiff = xDown - xUp;
   var yDiff = yDown - yUp;
 
-  if (state !== PAUSE) {
-    xDown = null;
-    yDown = null;
-    // return user.keyDown(e);
+  /* reset values */
+  xDown = null;
+  yDown = null;
+
+  if (state == PAUSE) {
     return;
   }
 
   if (Math.abs(xDiff) > Math.abs(yDiff)) {
     /*most significant*/
     if (xDiff > 0) {
-      /* left swipe */
+      return user.keyDown(LEFT);
     } else {
-      /* right swipe */
+      return user.keyDown(RIGHT);
     }
   } else {
     if (yDiff > 0) {
-      /* up swipe */
+      return user.keyDown(UP);
     } else {
-      /* down swipe */
+      return user.keyDown(DOWN);
     }
   }
-  /* reset values */
-  xDown = null;
-  yDown = null;
-
-  return true;
 }
 
 function loseLife() {
@@ -358,6 +360,6 @@ function init(wrapper) {
   if (state == WAITING) startNewGame();
 
   setInterval(function () {
-    console.log(state);
+    // console.log(state);
   }, 500);
 }

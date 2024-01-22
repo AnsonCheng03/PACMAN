@@ -4,13 +4,7 @@ Pacman.User = function (game, map, homePos) {
     eaten = null,
     due = null,
     lives = null,
-    score = 5,
-    keyMap = {};
-
-  keyMap[KEY.ARROW_LEFT] = LEFT;
-  keyMap[KEY.ARROW_UP] = UP;
-  keyMap[KEY.ARROW_RIGHT] = RIGHT;
-  keyMap[KEY.ARROW_DOWN] = DOWN;
+    score = 5;
 
   function addScore(nScore) {
     score += nScore;
@@ -56,11 +50,14 @@ Pacman.User = function (game, map, homePos) {
     resetPosition();
   }
 
-  function keyDown(e) {
-    if (typeof keyMap[e.keyCode] !== "undefined") {
-      due = keyMap[e.keyCode];
-      e.preventDefault();
-      e.stopPropagation();
+  function keyDown(keyCode, e) {
+    if (typeof keyCode !== "undefined") {
+      due = keyCode;
+
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       return false;
     }
     return true;
