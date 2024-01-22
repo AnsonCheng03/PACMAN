@@ -4,7 +4,8 @@ Pacman.User = function (game, map, homePos) {
     eaten = null,
     due = null,
     lives = null,
-    score = 5;
+    score = 5,
+    correctAnswerEaten = 0;
 
   function addScore(nScore) {
     score += nScore;
@@ -110,6 +111,7 @@ Pacman.User = function (game, map, homePos) {
   function move(ctx) {
     var npos = null,
       nextWhole = null,
+      onGrid = onGridSquare(position),
       oldPosition = position,
       block = null;
 
@@ -118,7 +120,7 @@ Pacman.User = function (game, map, homePos) {
 
       if (
         isOnSamePlane(due, direction) ||
-        (onGridSquare(position) && map.isFloorSpace(next(npos, due)))
+        (onGrid && map.isFloorSpace(next(npos, due)))
       ) {
         direction = due;
       } else {
@@ -130,7 +132,7 @@ Pacman.User = function (game, map, homePos) {
       npos = getNewCoord(direction, position);
     }
 
-    if (onGridSquare(position) && map.isWallSpace(next(npos, direction))) {
+    if (onGrid && map.isWallSpace(next(npos, direction))) {
       direction = NONE;
     }
 
@@ -138,18 +140,31 @@ Pacman.User = function (game, map, homePos) {
       return { new: position, old: position };
     }
 
-    if (npos.y === 100 && npos.x >= 190 && direction === RIGHT) {
-      npos = { y: 100, x: -10 };
+    // if (npos.y === 100 && npos.x >= 190 && direction === RIGHT) {
+    //   npos = { y: 100, x: -10 };
+    // }
+
+    // if (npos.y === 100 && npos.x <= -12 && direction === LEFT) {
+    //   npos = { y: 100, x: 190 };
+    // }
+
+    if (npos.y < 0) {
+      npos = { y: Pacman.MAP.length * 10, x: npos.x };
+    } else if (npos.y > Pacman.MAP.length * 10) {
+      npos = { y: 0, x: npos.x };
     }
 
-    if (npos.y === 100 && npos.x <= -12 && direction === LEFT) {
-      npos = { y: 100, x: 190 };
+    if (npos.x < 0) {
+      npos = { y: npos.y, x: Pacman.MAP[0].length * 10 };
+    } else if (npos.x > Pacman.MAP[0].length * 10) {
+      npos = { y: npos.y, x: 0 };
     }
 
     position = npos;
     nextWhole = next(position, direction);
 
     block = map.block(nextWhole);
+    // console.log(npos, direction);
 
     if (
       (isMidSquare(position.y) || isMidSquare(position.x)) &&

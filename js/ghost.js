@@ -4,8 +4,10 @@ Pacman.Ghost = function (game, map, ghostSpec) {
     eatable = null,
     eaten = null,
     due = null,
-    colour = ghostSpec.colour,
-    startingPosition = ghostSpec.home;
+    color =
+      ghostSpec.color ??
+      "#" +
+        ("00000" + ((Math.random() * 16777216) << 0).toString(16)).substr(-6);
 
   function getNewCoord(dir, current) {
     var speed = isVunerable() ? 1 : isHidden() ? 4 : 2,
@@ -44,8 +46,12 @@ Pacman.Ghost = function (game, map, ghostSpec) {
     return eatable === null && eaten !== null;
   }
 
-  function getRandomDirection() {
-    var moves =
+  function getRandomDirection(availableDirections = [LEFT, RIGHT, UP, DOWN]) {
+    if (availableDirections.length !== 4)
+      return availableDirections[
+        Math.floor(Math.random() * availableDirections.length)
+      ];
+    const moves =
       direction === LEFT || direction === RIGHT ? [UP, DOWN] : [LEFT, RIGHT];
     return moves[Math.floor(Math.random() * 2)];
   }
@@ -53,10 +59,10 @@ Pacman.Ghost = function (game, map, ghostSpec) {
   function reset() {
     eaten = null;
     eatable = null;
-    position = startingPosition
+    position = ghostSpec.home
       ? {
-          x: startingPosition.x * 10,
-          y: startingPosition.y * 10,
+          x: ghostSpec.home.x * 10,
+          y: ghostSpec.home.y * 10,
         }
       : { x: 90, y: 80 };
     direction = getRandomDirection();
@@ -119,12 +125,24 @@ Pacman.Ghost = function (game, map, ghostSpec) {
     } else if (eaten) {
       return "#222";
     }
-    return colour;
+    return color;
   }
 
   function draw(ctx) {
-    var s = map.blockSize,
-      top = (position.y / 10) * s,
+    const s = map.blockSize;
+    if (ghostSpec.img) {
+      const ghostImg = new Image();
+      ghostImg.src = ghostSpec.img;
+      ctx.drawImage(
+        ghostImg,
+        (position.x / 10) * s,
+        (position.y / 10) * s,
+        s,
+        s
+      );
+      return;
+    }
+    const top = (position.y / 10) * s + 4,
       left = (position.x / 10) * s;
 
     if (eatable && secondsAgo(eatable) > 8) {
@@ -136,7 +154,7 @@ Pacman.Ghost = function (game, map, ghostSpec) {
     }
 
     var tl = left + s;
-    var base = top + s - 3;
+    var base = top + s - 5;
     var inc = s / 10;
 
     var high = game.getTick() % 10 > 5 ? 3 : -3;
@@ -162,8 +180,8 @@ Pacman.Ghost = function (game, map, ghostSpec) {
 
     ctx.beginPath();
     ctx.fillStyle = "#FFF";
-    ctx.arc(left + 6, top + 6, s / 6, 0, 300, false);
-    ctx.arc(left + s - 6, top + 6, s / 6, 0, 300, false);
+    ctx.arc(left + 10, top + 6, s / 6, 0, 300, false);
+    ctx.arc(left + s - 10, top + 6, s / 6, 0, 300, false);
     ctx.closePath();
     ctx.fill();
 
@@ -208,7 +226,7 @@ Pacman.Ghost = function (game, map, ghostSpec) {
     return false;
   }
 
-  function move(ctx) {
+  function move(ctx, availableDirections = [LEFT, RIGHT, UP, DOWN]) {
     var oldPos = position,
       onGrid = onGridSquare(position),
       npos = null;
@@ -240,8 +258,23 @@ Pacman.Ghost = function (game, map, ghostSpec) {
         x: pointToCoord(nextSquare(npos.x, direction)),
       })
     ) {
-      due = getRandomDirection();
-      return move(ctx);
+      // TODO: Add available directions here
+      due = getRandomDirection(availableDirections);
+      // remove direction from availableDirections
+      availableDirections = availableDirections.filter((dir) => dir !== due);
+      return move(ctx, availableDirections);
+    }
+
+    if (npos.y < 0) {
+      npos = { y: Pacman.MAP.length * 10, x: npos.x };
+    } else if (npos.y > Pacman.MAP.length * 10) {
+      npos = { y: 0, x: npos.x };
+    }
+
+    if (npos.x < 0) {
+      npos = { y: npos.y, x: Pacman.MAP[0].length * 10 };
+    } else if (npos.x > Pacman.MAP[0].length * 10) {
+      npos = { y: npos.y, x: 0 };
     }
 
     position = npos;
@@ -252,6 +285,9 @@ Pacman.Ghost = function (game, map, ghostSpec) {
     }
 
     due = getRandomDirection();
+
+    console.log(position, direction);
+    // const nextBlock = map.block(position, direction);
 
     return {
       new: position,

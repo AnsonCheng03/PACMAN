@@ -12,19 +12,19 @@ var state = WAITING,
   ghosts = [],
   ghostSpecs = [
     {
-      colour: "#00FFDE",
+      // img: "../img/ghost_1.png",
       home: { x: 1, y: 1 },
     },
     // {
-    //   colour: "#FF0000",
+    // img: "../img/ghost_2.png",
     //   home: { x: 17, y: 1 },
     // },
     // {
-    //   colour: "#FFB8DE",
+    // img: "../img/ghost_3.png",
     //   home: { x: 1, y: 7 },
     // },
     {
-      colour: "#FFB847",
+      img: "../img/ghost_4.png",
       home: { x: 17, y: 7 },
     },
   ],
@@ -100,7 +100,9 @@ function keyDown(e) {
     stored = state;
     setState(PAUSE);
     map.draw(ctx);
-    dialog("Paused");
+    // dialog("Paused");
+    // show hint
+    window.alert("Hint: POPUP");
   } else if (state !== PAUSE) {
     return user.keyDown(keyMap[e.keyCode], e);
   }
@@ -154,9 +156,6 @@ function loseLife() {
   user.loseLife();
   if (user.getLives() > 0) {
     startLevel();
-  } else {
-    // show lose screen
-    window.alert("You lost!");
   }
 }
 
@@ -265,8 +264,9 @@ function mainLoop() {
     mainDraw();
   } else if (state === WAITING && stateChanged) {
     stateChanged = false;
-    map.draw(ctx);
-    dialog("Game Over");
+    // map.draw(ctx);
+    // dialog("Game Over");
+    window.alert("You lost!");
   } else if (state === EATEN_PAUSE && tick - timerStart > Pacman.FPS / 3) {
     map.draw(ctx);
     setState(PLAYING);
@@ -282,18 +282,18 @@ function mainLoop() {
       user.drawDead(ctx, (tick - timerStart) / (Pacman.FPS * 2));
     }
   } else if (state === COUNTDOWN) {
-    diff = 3 + Math.floor((timerStart - tick) / Pacman.FPS);
+    // diff = 3 + Math.floor((timerStart - tick) / Pacman.FPS);
 
-    if (diff === 0) {
-      map.draw(ctx);
-      setState(PLAYING);
-    } else {
-      if (diff !== lastTime) {
-        lastTime = diff;
-        map.draw(ctx);
-        dialog("Starting in: " + diff);
-      }
-    }
+    // if (diff === 0) {
+    map.draw(ctx);
+    setState(PLAYING);
+    // } else {
+    //   if (diff !== lastTime) {
+    //     lastTime = diff;
+    //     map.draw(ctx);
+    //     dialog("Starting in: " + diff);
+    //   }
+    // }
   }
 
   // drawFooter();
@@ -330,7 +330,12 @@ function init(wrapper) {
     canvas = document.createElement("canvas");
 
   canvas.setAttribute("width", blockSize * Pacman.MAP[0].length + "px");
-  canvas.setAttribute("height", blockSize * Pacman.MAP.length + 30 + "px");
+  canvas.setAttribute(
+    "height",
+    blockSize * Pacman.MAP.length +
+      // + 30
+      "px"
+  );
 
   wrapper.appendChild(canvas);
 
@@ -361,9 +366,11 @@ function init(wrapper) {
 
   timer = window.setInterval(mainLoop, 1000 / Pacman.FPS);
 
-  if (state == WAITING) startNewGame();
-
-  setInterval(function () {
-    // console.log(state);
-  }, 500);
+  if (state == WAITING) {
+    window.alert("Click to start");
+    startNewGame();
+  }
+  // setInterval(function () {
+  // console.log(state);
+  // }, 500);
 }
