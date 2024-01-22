@@ -154,6 +154,9 @@ function loseLife() {
   user.loseLife();
   if (user.getLives() > 0) {
     startLevel();
+  } else {
+    // show lose screen
+    window.alert("You lost!");
   }
 }
 
@@ -235,9 +238,9 @@ function mainDraw() {
       if (ghosts[i].isVunerable()) {
         ghosts[i].eat();
         eatenCount += 1;
-        // nScore = eatenCount * 50;
-        // drawScore(nScore, ghostPos[i]);
-        // user.addScore(nScore);
+        nScore = eatenCount * 50;
+        drawScore(nScore, ghostPos[i]);
+        user.addScore(nScore);
         setState(EATEN_PAUSE);
         timerStart = tick;
       } else if (ghosts[i].isDangerous()) {
@@ -292,7 +295,7 @@ function mainLoop() {
     }
   }
 
-  drawFooter();
+  // drawFooter();
 }
 
 function eatenPill() {

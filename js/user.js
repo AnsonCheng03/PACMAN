@@ -27,7 +27,7 @@ Pacman.User = function (game, map, homePos) {
 
   function initUser() {
     score = 0;
-    lives = 3;
+    lives = 1;
     newLevel();
   }
 
