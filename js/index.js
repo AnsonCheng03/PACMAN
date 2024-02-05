@@ -13,22 +13,14 @@ var state = WAITING,
   ghostSpecs = [
     {
       // img: "./img/ghost_1.png",
-      home: { x: 1, y: 1 },
+      home: { x: 8, y: 5 },
     },
-    // {
-    // img: "./img/ghost_2.png",
-    //   home: { x: 17, y: 1 },
-    // },
-    // {
-    // img: "./img/ghost_3.png",
-    //   home: { x: 1, y: 7 },
-    // },
     {
-      img: "./img/ghost_4.png",
-      home: { x: 17, y: 7 },
+      // img: "./img/ghost_2.png",
+      home: { x: 11, y: 5 },
     },
   ],
-  userHomePos = { x: 9, y: 1 },
+  userHomePos = { x: 10, y: 9 },
   eatenCount = 0,
   level = 0,
   tick = 0,
@@ -93,16 +85,17 @@ function startNewGame() {
 }
 
 function keyDown(e) {
-  if (e.keyCode === KEY.P && state === PAUSE) {
+  if (e.keyCode === KEY.H && state === PAUSE) {
     map.draw(ctx);
-    setState(stored);
-  } else if (e.keyCode === KEY.P) {
+    // setState(stored);
+  } else if (e.keyCode === KEY.H) {
     stored = state;
     setState(PAUSE);
     map.draw(ctx);
     // dialog("Paused");
     // show hint
-    window.alert("Hint: POPUP");
+    // window.alert("Hint: POPUP");
+    document.querySelector(".Hint").style.display = "flex";
   } else if (state !== PAUSE) {
     return user.keyDown(keyMap[e.keyCode], e);
   }
@@ -200,7 +193,7 @@ function drawFooter() {
   }
 
   ctx.fillStyle = "#FFFF00";
-  ctx.font = "14px BDCartoonShoutRegular";
+  ctx.font = "14xpx BDCartoonShoutRegular";
   ctx.fillText("Score: " + user.theScore(), 30, textBase);
   ctx.fillText("Level: " + level, 260, textBase);
 }
@@ -257,8 +250,7 @@ function mainLoop() {
     ++tick;
   }
 
-  map.drawPills(ctx);
-  map.drawAnswer(ctx);
+  map.drawSpecial(ctx);
 
   if (state === PLAYING) {
     mainDraw();
@@ -266,7 +258,10 @@ function mainLoop() {
     stateChanged = false;
     // map.draw(ctx);
     // dialog("Game Over");
-    window.alert("You lost!");
+    // window.alert("You lost!");
+    const hint = document.querySelectorAll(".Hint")[0];
+    hint.style.display = "flex";
+    hint.innerHTML = `<img src="./img/gameover.svg" alt="Game Over" />`;
   } else if (state === EATEN_PAUSE && tick - timerStart > Pacman.FPS / 3) {
     map.draw(ctx);
     setState(PLAYING);
@@ -302,9 +297,19 @@ function mainLoop() {
 function eatenPill() {
   timerStart = tick;
   eatenCount = 0;
-  // for (i = 0; i < ghosts.length; i += 1) {
-  //   ghosts[i].makeEatable(ctx);
-  // }
+  for (i = 0; i < ghosts.length; i += 1) {
+    ghosts[i].makeEatable(ctx);
+  }
+}
+
+function eatenAnswer(Answer) {
+  console.log("Answer", Answer);
+  if (Pacman.AnswerSet[`Answer_${Answer - 4}`].correct) {
+    user.eatenCorrectAnswer();
+  } else {
+    setState(DYING);
+    timerStart = tick;
+  }
 }
 
 function completedLevel() {
@@ -329,7 +334,7 @@ function init(wrapper) {
     blockSize = wrapper.offsetWidth / (Pacman.MAP[0].length - 2),
     canvas = document.createElement("canvas");
 
-  if (blockSize * (Pacman.MAP.length + 2) > window.innerHeight) {
+  if (blockSize * Pacman.MAP.length > window.innerHeight) {
     blockSize = window.innerHeight / (Pacman.MAP.length + 2);
   }
 
@@ -350,6 +355,7 @@ function init(wrapper) {
     {
       completedLevel: completedLevel,
       eatenPill: eatenPill,
+      eatenAnswer: eatenAnswer,
     },
     map,
     userHomePos
@@ -371,10 +377,31 @@ function init(wrapper) {
   timer = window.setInterval(mainLoop, 1000 / Pacman.FPS);
 
   if (state == WAITING) {
-    window.alert("Click to start");
+    // window.alert("Click to start");
     startNewGame();
   }
   // setInterval(function () {
   // console.log(state);
   // }, 500);
+}
+
+const hintButtonClicked = () => {
+  document.querySelector(".Hint").style.display = "none";
+  if (state == WAITING) {
+    init(document.getElementById("pacman"));
+  } else {
+    map.draw(ctx);
+    setState(stored);
+  }
+};
+
+function initGame() {
+  const hintItems = document.querySelectorAll(".Hint ul");
+  Object.values(Pacman.AnswerSet)
+    .sort(() => Math.random() - 0.5)
+    .forEach((answer) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<img src="${answer.Image}" alt="${answer.Description}" /> ${answer.Description}`;
+      hintItems[0].appendChild(li);
+    });
 }

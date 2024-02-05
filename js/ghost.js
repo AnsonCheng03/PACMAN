@@ -115,7 +115,7 @@ Pacman.Ghost = function (game, map, ghostSpec) {
     return (game.getTick() - tick) / Pacman.FPS;
   }
 
-  function getColour() {
+  function getColor() {
     if (eatable) {
       if (secondsAgo(eatable) > 5) {
         return game.getTick() % 20 > 10 ? "#FFFFFF" : "#0000BB";
@@ -142,7 +142,7 @@ Pacman.Ghost = function (game, map, ghostSpec) {
       );
       return;
     }
-    const top = (position.y / 10) * s + 4,
+    const top = (position.y / 10) * s + s / 10,
       left = (position.x / 10) * s;
 
     if (eatable && secondsAgo(eatable) > 8) {
@@ -153,14 +153,14 @@ Pacman.Ghost = function (game, map, ghostSpec) {
       eaten = null;
     }
 
-    var tl = left + s;
-    var base = top + s - 5;
+    var tl = left + s - s / 10;
+    var base = top + s - s / 5;
     var inc = s / 10;
 
     var high = game.getTick() % 10 > 5 ? 3 : -3;
     var low = game.getTick() % 10 > 5 ? -3 : 3;
 
-    ctx.fillStyle = getColour();
+    ctx.fillStyle = getColor();
     ctx.beginPath();
 
     ctx.moveTo(left, base);
@@ -180,8 +180,8 @@ Pacman.Ghost = function (game, map, ghostSpec) {
 
     ctx.beginPath();
     ctx.fillStyle = "#FFF";
-    ctx.arc(left + 10, top + 6, s / 6, 0, 300, false);
-    ctx.arc(left + s - 10, top + 6, s / 6, 0, 300, false);
+    ctx.arc(left + s / 6, top + 6, s / 6, 0, 300, false);
+    ctx.arc(left + s - s / 6, top + 6, s / 6, 0, 300, false);
     ctx.closePath();
     ctx.fill();
 
@@ -271,9 +271,9 @@ Pacman.Ghost = function (game, map, ghostSpec) {
       npos = { y: 0, x: npos.x };
     }
 
-    if (npos.x < 0) {
+    if (npos.x <= 0) {
       npos = { y: npos.y, x: Pacman.MAP[0].length * 10 };
-    } else if (npos.x > Pacman.MAP[0].length * 10) {
+    } else if (npos.x >= Pacman.MAP[0].length * 10) {
       npos = { y: npos.y, x: 0 };
     }
 
@@ -285,9 +285,6 @@ Pacman.Ghost = function (game, map, ghostSpec) {
     }
 
     due = getRandomDirection();
-
-    console.log(position, direction);
-    // const nextBlock = map.block(position, direction);
 
     return {
       new: position,

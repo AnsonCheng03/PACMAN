@@ -38,12 +38,75 @@
       background: #000;
       overscroll-behavior: none;
     }
+
+    .Hint {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 80%;
+      height: 80%;
+      padding: 10%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      font-family: 'BDCartoonShoutRegular';
+      font-size: 2em;
+    }
+
+    .Hint>img {
+      width: 100%;
+    }
+
+    .Hint h1 {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+
+    .Hint ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+    }
+
+    .Hint ul li {
+      margin: 10px 0;
+      font-size: 1rem;
+    }
+
+    .Hint ul li img {
+      width: 1rem;
+      height: 1rem;
+      scale: 1.5;
+      margin-right: 10px;
+    }
+
+    .Hint button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+    }
   </style>
 
 </head>
 
 <body>
   <div id="pacman"></div>
+  <div class="Hint">
+    <h1>Hint</h1>
+    <p>Use the arrow keys to move Pacman around the maze and eat all the dots. Avoid the ghosts. If you eat a power
+      pill, you can eat the ghosts! Good luck!</p>
+    <ul>
+    </ul>
+    <button onclick="hintButtonClicked();">Got it!</button>
+  </div>
 
   <script src="js/environment.js"></script>
   <script src="js/ghost.js"></script>
@@ -52,7 +115,7 @@
   <script src="js/index.js"></script>
 
   <script>
-    init(document.getElementById("pacman"));
+    initGame();
   </script>
 
 </body>

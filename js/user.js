@@ -9,9 +9,9 @@ Pacman.User = function (game, map, homePos) {
 
   function addScore(nScore) {
     score += nScore;
-    if (score >= 10000 && score - nScore < 10000) {
-      lives += 1;
-    }
+    // if (score >= 10000 && score - nScore < 10000) {
+    //   lives += 1;
+    // }
   }
 
   function theScore() {
@@ -22,6 +22,10 @@ Pacman.User = function (game, map, homePos) {
     lives -= 1;
   }
 
+  function eatenCorrectAnswer() {
+    correctAnswerEaten += 1;
+  }
+
   function getLives() {
     return lives;
   }
@@ -29,6 +33,7 @@ Pacman.User = function (game, map, homePos) {
   function initUser() {
     score = 0;
     lives = 1;
+    correctAnswerEaten = 0;
     newLevel();
   }
 
@@ -148,15 +153,15 @@ Pacman.User = function (game, map, homePos) {
     //   npos = { y: 100, x: 190 };
     // }
 
-    if (npos.y < 0) {
+    if (npos.y <= 0) {
       npos = { y: Pacman.MAP.length * 10, x: npos.x };
     } else if (npos.y > Pacman.MAP.length * 10) {
       npos = { y: 0, x: npos.x };
     }
 
-    if (npos.x < 0) {
+    if (npos.x <= 0) {
       npos = { y: npos.y, x: Pacman.MAP[0].length * 10 };
-    } else if (npos.x > Pacman.MAP[0].length * 10) {
+    } else if (npos.x >= Pacman.MAP[0].length * 10) {
       npos = { y: npos.y, x: 0 };
     }
 
@@ -171,21 +176,29 @@ Pacman.User = function (game, map, homePos) {
       [
         Pacman.BISCUIT,
         Pacman.PILL,
-        Pacman.ANSWER_A,
-        Pacman.ANSWER_B,
-        Pacman.ANSWER_C,
-        Pacman.ANSWER_D,
-        Pacman.ANSWER_E,
+        ...Object.values(Pacman.AnswerSet).map((answer) => answer.MapValue),
       ].includes(block)
     ) {
       map.setBlock(nextWhole, Pacman.EMPTY);
       addScore(block === Pacman.BISCUIT ? 10 : 50);
       eaten += 1;
 
-      // const totalFood = Pacman.totalFood;
-      // if (eaten === totalFood) {
-      //   game.completedLevel();
-      // }
+      const totalFood = Pacman.totalFood;
+      const TotalCorrectAnswers = // only correct answers (index 1 is true)
+        Object.values(Pacman.AnswerSet).filter(
+          (answer) => answer["correct"]
+        ).length;
+      if (
+        // eaten === totalFood
+        correctAnswerEaten >= TotalCorrectAnswers
+      ) {
+        console.log("You Win");
+        const hint = document.querySelectorAll(".Hint")[0];
+        hint.style.display = "flex";
+        hint.innerHTML = `<img src="./img/gamesucessful.svg" alt="You Win" />`;
+      }
+
+      console.log("eaten", TotalCorrectAnswers, correctAnswerEaten);
 
       // When eaten all correct answers, game is completed
 
@@ -193,6 +206,12 @@ Pacman.User = function (game, map, homePos) {
 
       if (block === Pacman.PILL) {
         game.eatenPill();
+      } else if (
+        Object.values(Pacman.AnswerSet)
+          .map((answer) => answer.MapValue)
+          .includes(block)
+      ) {
+        game.eatenAnswer(block);
       }
     }
 
@@ -276,6 +295,7 @@ Pacman.User = function (game, map, homePos) {
     drawDead: drawDead,
     loseLife: loseLife,
     getLives: getLives,
+    eatenCorrectAnswer: eatenCorrectAnswer,
     score: score,
     addScore: addScore,
     theScore: theScore,
