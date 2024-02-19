@@ -250,13 +250,12 @@ function mainLoop() {
     mainDraw();
   } else if (state === WAITING && stateChanged) {
     stateChanged = false;
-    // map.draw(ctx);
-    // dialog("Game Over");
-    // window.alert("You lost!");
     const hint = document.querySelectorAll(".Hint")[0];
     hint.style.display = "flex";
     document.querySelector(".showHint").style.display = "none";
     hint.innerHTML = `<img src="./img/gameover.svg" alt="Game Over" />`;
+    const gameOverAudio = new Audio("./audio/fail.mp3");
+    gameOverAudio.play();
   } else if (state === EATEN_PAUSE && tick - timerStart > Pacman.FPS / 3) {
     map.draw(ctx);
     setState(PLAYING);

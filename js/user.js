@@ -34,6 +34,9 @@ Pacman.User = function (game, map, homePos) {
       hint.style.display = "flex";
       document.querySelector(".showHint").style.display = "none";
       hint.innerHTML = `<img src="./img/gamesucessful.svg" alt="You Win" />`;
+      // play sound (audio/success.mp3)
+      const successAudio = new Audio("./audio/success.mp3");
+      successAudio.play();
     }
   }
 
