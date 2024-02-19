@@ -250,12 +250,12 @@ function mainLoop() {
     mainDraw();
   } else if (state === WAITING && stateChanged) {
     stateChanged = false;
+    const gameOverAudio = new Audio("./audio/fail.mp3");
+    gameOverAudio.play();
     const hint = document.querySelectorAll(".Hint")[0];
     hint.style.display = "flex";
     document.querySelector(".showHint").style.display = "none";
-    hint.innerHTML = `<img src="./img/gameover.svg" alt="Game Over" />`;
-    const gameOverAudio = new Audio("./audio/fail.mp3");
-    gameOverAudio.play();
+    hint.innerHTML = `<div class="container"><img src="./img/gameover.svg" alt="Game Over" /><button onclick="location.reload();">Retry</button></div>`;
   } else if (state === EATEN_PAUSE && tick - timerStart > Pacman.FPS / 3) {
     map.draw(ctx);
     setState(PLAYING);

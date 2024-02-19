@@ -45,7 +45,8 @@
       left: 0;
       width: 80%;
       height: 80%;
-      padding: 10%;
+      padding: 10vh 10vw;
+      padding: 10dvh 10dvw;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -56,13 +57,9 @@
       font-size: 2em;
     }
 
-    .Hint>img {
-      width: 100%;
-    }
-
     .Hint h1 {
       font-size: 1.5em;
-      margin-bottom: 20px;
+      margin: 20px;
     }
 
     .Hint ul {
@@ -89,7 +86,7 @@
     }
 
     .Hint button {
-      margin-top: 20px;
+      margin: 20px;
       padding: 10px 20px;
       font-size: 0.75em;
       background: #fff;
@@ -124,6 +121,19 @@
       font-size: 0.5em;
       color: #fff;
     }
+
+    .Hint .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .Hint .container img {
+      width: 100%;
+    }
   </style>
 
 </head>
@@ -137,18 +147,17 @@
     <ul>
     </ul>
     <button onclick="hintButtonClicked();">Got it!</button>
-  </div>
-  <button class="showHint" onclick="showHint();">?</button>
+    <button class="showHint" onclick="showHint();">?</button>
 
-  <script src="js/environment.js"></script>
-  <script src="js/ghost.js"></script>
-  <script src="js/user.js"></script>
-  <script src="js/map.js"></script>
-  <script src="js/index.js"></script>
+    <script src="js/environment.js"></script>
+    <script src="js/ghost.js"></script>
+    <script src="js/user.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/index.js"></script>
 
-  <script>
-    initGame();
-  </script>
+    <script>
+      initGame();
+    </script>
 
 </body>
 

@@ -30,13 +30,12 @@ Pacman.User = function (game, map, homePos) {
     ) {
       console.log("You Win");
       state = PAUSE;
+      const successAudio = new Audio("./audio/success.mp3");
+      successAudio.play();
       const hint = document.querySelectorAll(".Hint")[0];
       hint.style.display = "flex";
       document.querySelector(".showHint").style.display = "none";
-      hint.innerHTML = `<img src="./img/gamesucessful.svg" alt="You Win" />`;
-      // play sound (audio/success.mp3)
-      const successAudio = new Audio("./audio/success.mp3");
-      successAudio.play();
+      hint.innerHTML = `<div class="container"><img src="./img/gamesucessful.svg" alt="You Win" /></div>`;
     }
   }
 
