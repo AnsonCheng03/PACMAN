@@ -3,6 +3,7 @@ Pacman.BISCUIT = 1;
 Pacman.EMPTY = 2;
 Pacman.BLOCK = 3;
 Pacman.PILL = 4;
+Pacman.NotReplaceableBiscuit = 5;
 
 const Answers = [
   ["Correct Answer 1", true],
@@ -23,7 +24,7 @@ AnswerImages = [
 Pacman.AnswerSet = Answers.sort(() => Math.random() - 0.5).reduce(
   (acc, answer, i) => {
     acc[`Answer_${i + 1}`] = {
-      MapValue: i + 5,
+      MapValue: i + 100,
       Description: answer[0],
       correct: answer[1],
       Image: AnswerImages[i],
@@ -32,6 +33,9 @@ Pacman.AnswerSet = Answers.sort(() => Math.random() - 0.5).reduce(
   },
   {}
 );
+
+Pacman.TotalCorrectAnswers = // only correct answers (index 1 is true)
+  Object.values(Pacman.AnswerSet).filter((answer) => answer["correct"]).length;
 
 // replace random five '1' with AnswerSet (5, 6, 7, 8, 9)
 function replaceRandomOnesWithAnswerSet(map, answerSet) {
@@ -58,6 +62,13 @@ function replaceRandomOnesWithAnswerSet(map, answerSet) {
     flatMap[index] = answerSet[answerKey].MapValue;
   });
 
+  // make all 5s to 1s
+  flatMap.forEach((value, index) => {
+    if (value === Pacman.NotReplaceableBiscuit) {
+      flatMap[index] = Pacman.BISCUIT;
+    }
+  });
+
   // Convert the 1D array back to a 2D array
   const updatedMap = [];
   while (flatMap.length) {
@@ -70,16 +81,27 @@ function replaceRandomOnesWithAnswerSet(map, answerSet) {
 // Replace random '1' with AnswerSet values
 Pacman.MAP = replaceRandomOnesWithAnswerSet(
   [
+    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    //   [0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0],
+    //   [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0],
+    //   [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
+    //   [0, 1, 0, 1, 0, 0, 1, 0, 0, 2, 2, 0, 0, 1, 0, 0, 1, 0, 1, 0],
+    //   [0, 1, 1, 1, 1, 1, 1, 0, 2, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1, 0],
+    //   [0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0],
+    //   [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
+    //   [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0],
+    //   [0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0],
+    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0],
-    [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0],
-    [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
-    [0, 1, 0, 1, 0, 0, 1, 0, 0, 2, 2, 0, 0, 1, 0, 0, 1, 0, 1, 0],
-    [0, 1, 1, 1, 1, 1, 1, 0, 2, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1, 0],
-    [0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0],
-    [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
-    [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0],
-    [0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0],
+    [0, 5, 5, 1, 5, 0, 5, 1, 5, 5, 5, 5, 1, 5, 0, 5, 5, 1, 5, 0],
+    [0, 5, 0, 0, 5, 0, 5, 0, 0, 0, 0, 0, 0, 5, 0, 5, 0, 0, 5, 0],
+    [0, 5, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 0, 1, 0],
+    [0, 1, 0, 5, 0, 0, 5, 0, 0, 2, 2, 0, 0, 5, 0, 0, 5, 0, 5, 0],
+    [0, 5, 5, 5, 1, 1, 5, 0, 2, 2, 2, 2, 0, 5, 1, 1, 5, 5, 5, 0],
+    [0, 5, 0, 5, 0, 0, 5, 0, 0, 0, 0, 0, 0, 5, 0, 0, 5, 0, 5, 0],
+    [0, 5, 0, 1, 5, 5, 5, 5, 1, 5, 1, 5, 5, 5, 5, 5, 5, 0, 5, 0],
+    [0, 5, 0, 0, 5, 0, 5, 0, 0, 0, 0, 0, 0, 1, 0, 5, 0, 0, 1, 0],
+    [0, 5, 1, 5, 1, 0, 5, 5, 5, 5, 5, 5, 5, 5, 0, 5, 1, 5, 5, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ],
   Pacman.AnswerSet

@@ -24,6 +24,17 @@ Pacman.User = function (game, map, homePos) {
 
   function eatenCorrectAnswer() {
     correctAnswerEaten += 1;
+    if (
+      // eaten === totalFood
+      correctAnswerEaten >= Pacman.TotalCorrectAnswers
+    ) {
+      console.log("You Win");
+      state = PAUSE;
+      const hint = document.querySelectorAll(".Hint")[0];
+      hint.style.display = "flex";
+      document.querySelector(".showHint").style.display = "none";
+      hint.innerHTML = `<img src="./img/gamesucessful.svg" alt="You Win" />`;
+    }
   }
 
   function getLives() {
@@ -180,25 +191,10 @@ Pacman.User = function (game, map, homePos) {
       ].includes(block)
     ) {
       map.setBlock(nextWhole, Pacman.EMPTY);
-      addScore(block === Pacman.BISCUIT ? 10 : 50);
+      // addScore(block === Pacman.BISCUIT ? 10 : 50);
       eaten += 1;
 
-      const totalFood = Pacman.totalFood;
-      const TotalCorrectAnswers = // only correct answers (index 1 is true)
-        Object.values(Pacman.AnswerSet).filter(
-          (answer) => answer["correct"]
-        ).length;
-      if (
-        // eaten === totalFood
-        correctAnswerEaten >= TotalCorrectAnswers
-      ) {
-        console.log("You Win");
-        const hint = document.querySelectorAll(".Hint")[0];
-        hint.style.display = "flex";
-        hint.innerHTML = `<img src="./img/gamesucessful.svg" alt="You Win" />`;
-      }
-
-      console.log("eaten", TotalCorrectAnswers, correctAnswerEaten);
+      // const totalFood = Pacman.totalFood;
 
       // When eaten all correct answers, game is completed
 

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <title>HTML5 Pacman</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <style type="text/css">
     @font-face {
       font-family: 'BDCartoonShoutRegular';
@@ -66,10 +66,14 @@
     }
 
     .Hint ul {
+      width: 100%;
       list-style: none;
       padding: 0;
       margin: 0;
       text-align: left;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 0 10px;
     }
 
     .Hint ul li {
@@ -87,11 +91,38 @@
     .Hint button {
       margin-top: 20px;
       padding: 10px 20px;
-      font-size: 1em;
+      font-size: 0.75em;
       background: #fff;
       border: none;
       cursor: pointer;
-      border-radius: 10px;
+      border-radius: 5px;
+    }
+
+    .showHint {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      color: #000;
+      font-size: 1.5em;
+      width: 2rem;
+      height: 2rem;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    h1 {
+      font-family: 'BDCartoonShoutRegular';
+      font-size: 1em;
+      color: #fff;
+      margin: 0;
+    }
+
+    p {
+      font-family: 'BDCartoonShoutRegular';
+      font-size: 0.5em;
+      color: #fff;
     }
   </style>
 
@@ -107,6 +138,7 @@
     </ul>
     <button onclick="hintButtonClicked();">Got it!</button>
   </div>
+  <button class="showHint" onclick="showHint();">?</button>
 
   <script src="js/environment.js"></script>
   <script src="js/ghost.js"></script>

@@ -89,13 +89,7 @@ function keyDown(e) {
     map.draw(ctx);
     // setState(stored);
   } else if (e.keyCode === KEY.H) {
-    stored = state;
-    setState(PAUSE);
-    map.draw(ctx);
-    // dialog("Paused");
-    // show hint
-    // window.alert("Hint: POPUP");
-    document.querySelector(".Hint").style.display = "flex";
+    showHint();
   } else if (state !== PAUSE) {
     return user.keyDown(keyMap[e.keyCode], e);
   }
@@ -261,6 +255,7 @@ function mainLoop() {
     // window.alert("You lost!");
     const hint = document.querySelectorAll(".Hint")[0];
     hint.style.display = "flex";
+    document.querySelector(".showHint").style.display = "none";
     hint.innerHTML = `<img src="./img/gameover.svg" alt="Game Over" />`;
   } else if (state === EATEN_PAUSE && tick - timerStart > Pacman.FPS / 3) {
     map.draw(ctx);
@@ -304,7 +299,7 @@ function eatenPill() {
 
 function eatenAnswer(Answer) {
   console.log("Answer", Answer);
-  if (Pacman.AnswerSet[`Answer_${Answer - 4}`].correct) {
+  if (Pacman.AnswerSet[`Answer_${Answer - 99}`].correct) {
     user.eatenCorrectAnswer();
   } else {
     setState(DYING);
@@ -387,6 +382,7 @@ function init(wrapper) {
 
 const hintButtonClicked = () => {
   document.querySelector(".Hint").style.display = "none";
+  document.querySelector(".showHint").style.display = "flex";
   if (state == WAITING) {
     init(document.getElementById("pacman"));
   } else {
@@ -404,4 +400,12 @@ function initGame() {
       li.innerHTML = `<img src="${answer.Image}" alt="${answer.Description}" /> ${answer.Description}`;
       hintItems[0].appendChild(li);
     });
+}
+
+function showHint() {
+  stored = state;
+  setState(PAUSE);
+  map.draw(ctx);
+  document.querySelector(".Hint").style.display = "flex";
+  document.querySelector(".showHint").style.display = "none";
 }
