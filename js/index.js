@@ -411,7 +411,7 @@ function showHint() {
 }
 
 function submitSCORM(win) {
-  const i = 0;
+  let i = 0;
   const AnswerSet = Object.values(Pacman.AnswerSet);
   AnswerSet.forEach((element) => {
     SCOSetValue(
