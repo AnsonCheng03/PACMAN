@@ -28,7 +28,7 @@ Pacman.User = function (game, map, homePos) {
       // eaten === totalFood
       correctAnswerEaten >= Pacman.TotalCorrectAnswers
     ) {
-      console.log("You Win");
+      // console.log("You Win");
       state = PAUSE;
       const successAudio = new Audio("./audio/success.mp3");
       successAudio.play();
@@ -36,6 +36,7 @@ Pacman.User = function (game, map, homePos) {
       hint.style.display = "flex";
       document.querySelector(".showHint").style.display = "none";
       hint.innerHTML = `<div class="container"><img src="./img/gamesucessful.svg" alt="You Win" /></div>`;
+      submitSCORM(true);
     }
   }
 

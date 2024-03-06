@@ -6,6 +6,7 @@ Pacman.PILL = 4;
 Pacman.NotReplaceableBiscuit = 5;
 
 const Answers = [
+  // ["Answer", correct]
   ["Correct Answer 1", true],
   ["Wrong Answer 1", false],
   ["Wrong Answer 2", false],
@@ -28,6 +29,7 @@ Pacman.AnswerSet = Answers.sort(() => Math.random() - 0.5).reduce(
       Description: answer[0],
       correct: answer[1],
       Image: AnswerImages[i],
+      eaten: false,
     };
     return acc;
   },
@@ -81,17 +83,6 @@ function replaceRandomOnesWithAnswerSet(map, answerSet) {
 // Replace random '1' with AnswerSet values
 Pacman.MAP = replaceRandomOnesWithAnswerSet(
   [
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0],
-    //   [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0],
-    //   [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
-    //   [0, 1, 0, 1, 0, 0, 1, 0, 0, 2, 2, 0, 0, 1, 0, 0, 1, 0, 1, 0],
-    //   [0, 1, 1, 1, 1, 1, 1, 0, 2, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1, 0],
-    //   [0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0],
-    //   [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
-    //   [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0],
-    //   [0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 5, 5, 1, 5, 0, 5, 1, 5, 5, 5, 5, 1, 5, 0, 5, 5, 1, 5, 0],
     [0, 5, 0, 0, 5, 0, 5, 0, 0, 0, 0, 0, 0, 5, 0, 5, 0, 0, 5, 0],

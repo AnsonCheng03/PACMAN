@@ -256,6 +256,7 @@ function mainLoop() {
     hint.style.display = "flex";
     document.querySelector(".showHint").style.display = "none";
     hint.innerHTML = `<div class="container"><img src="./img/gameover.svg" alt="Game Over" /><button onclick="location.reload();">Retry</button></div>`;
+    submitSCORM(false);
   } else if (state === EATEN_PAUSE && tick - timerStart > Pacman.FPS / 3) {
     map.draw(ctx);
     setState(PLAYING);
@@ -297,7 +298,7 @@ function eatenPill() {
 }
 
 function eatenAnswer(Answer) {
-  console.log("Answer", Answer);
+  Pacman.AnswerSet[`Answer_${Answer - 99}`].eaten = true;
   if (Pacman.AnswerSet[`Answer_${Answer - 99}`].correct) {
     user.eatenCorrectAnswer();
   } else {
@@ -407,4 +408,26 @@ function showHint() {
   map.draw(ctx);
   document.querySelector(".Hint").style.display = "flex";
   document.querySelector(".showHint").style.display = "none";
+}
+
+function submitSCORM(win) {
+  const AnswerSet = Object.values(Pacman.AnswerSet);
+  AnswerSet.forEach((element) => {
+    SCOSetValue(
+      `cmi.interactions.${i}.id`,
+      `${element.Description} (${element.correct ? "" : "in"}correct)`
+    );
+    SCOSetValue(`cmi.interactions.${i}.type`, "fill-in");
+    SCOSetValue(
+      `cmi.interactions.${i}.student_response`,
+      `${element.eaten ? "eaten" : "not eaten"}`
+    );
+    SCOSetValue(
+      `cmi.interactions.${i}.result`,
+      `${resultArray[i] ? "correct" : "wrong"}`
+    );
+  });
+  SCOSetValue("cmi.core.score.raw", win ? 100 : 0);
+  SCOSetValue("cmi.core.score.max", AnswerSet.length);
+  SCOSetValue("cmi.core.lesson_status", "completed");
 }

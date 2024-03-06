@@ -5,6 +5,8 @@
   <meta charset="utf-8" />
   <title>HTML5 Pacman</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <script src="js/scrom.js"></script>
+
   <style type="text/css">
     @font-face {
       font-family: 'BDCartoonShoutRegular';
@@ -138,7 +140,8 @@
 
 </head>
 
-<body>
+<body onload="SCOInitialize()" onunload="SCOFinish()" onbeforeunload="SCOFinish()">
+
   <div id="pacman"></div>
   <div class="Hint">
     <h1>Hint</h1>
