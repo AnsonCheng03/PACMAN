@@ -411,6 +411,7 @@ function showHint() {
 }
 
 function submitSCORM(win) {
+  const i = 0;
   const AnswerSet = Object.values(Pacman.AnswerSet);
   AnswerSet.forEach((element) => {
     SCOSetValue(
@@ -426,6 +427,7 @@ function submitSCORM(win) {
       `cmi.interactions.${i}.result`,
       `${element.correct ? "correct" : "wrong"}`
     );
+    i++;
   });
   SCOSetValue("cmi.core.score.raw", win ? 100 : 0);
   SCOSetValue("cmi.core.score.max", AnswerSet.length);
