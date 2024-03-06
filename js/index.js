@@ -425,7 +425,12 @@ function submitSCORM(win) {
     );
     SCOSetValue(
       `cmi.interactions.${i}.result`,
-      `${element.correct ? "correct" : "wrong"}`
+      `${
+        (element.correct && element.eaten) ||
+        (!element.correct && !element.eaten)
+          ? "correct"
+          : "wrong"
+      }`
     );
     i++;
   });
