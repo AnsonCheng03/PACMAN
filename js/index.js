@@ -424,7 +424,7 @@ function submitSCORM(win) {
     );
     SCOSetValue(
       `cmi.interactions.${i}.result`,
-      `${resultArray[i] ? "correct" : "wrong"}`
+      `${element.correct ? "correct" : "wrong"}`
     );
   });
   SCOSetValue("cmi.core.score.raw", win ? 100 : 0);
