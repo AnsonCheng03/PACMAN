@@ -345,12 +345,15 @@ Pacman.Map = function (size) {
 
       if (layout === Pacman.BISCUIT) {
         ctx.fillStyle = "#FFF";
-        ctx.fillRect(
-          x * blockSize + blockSize / 2.25,
-          y * blockSize + blockSize / 2.25,
-          blockSize / 10,
-          blockSize / 10
+        ctx.arc(
+          x * blockSize + blockSize / 2,
+          y * blockSize + blockSize / 2,
+          blockSize / 15,
+          0,
+          Math.PI * 2,
+          false
         );
+        ctx.fill();
       }
     }
     ctx.closePath();
