@@ -7,11 +7,11 @@ Pacman.NotReplaceableBiscuit = 5;
 
 const Answers = [
   // ["Answer", correct]
-  ["Correct Answer 1", true],
-  ["Wrong Answer 1", false],
-  ["Wrong Answer 2", false],
-  ["Correct Answer 2", true],
-  ["Correct Answer 3", true],
+  ["Caspase 8", true],
+  ["Caspase 9", false],
+  ["FAS ligand", true],
+  ["FAS receptor", true],
+  ["Cytochrome c", false],
 ];
 
 AnswerImages = [
@@ -80,8 +80,13 @@ function replaceRandomOnesWithAnswerSet(map, answerSet) {
   return updatedMap;
 }
 
+function transpose(matrix) {
+  return matrix[0].map((col, i) => matrix.map((row) => row[i]));
+}
+
 // Replace random '1' with AnswerSet values
 Pacman.MAP = replaceRandomOnesWithAnswerSet(
+  // transpose(
   [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 5, 5, 1, 5, 0, 5, 1, 5, 5, 5, 5, 1, 5, 0, 5, 5, 1, 5, 0],
