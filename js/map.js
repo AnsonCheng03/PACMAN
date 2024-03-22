@@ -196,8 +196,8 @@ Pacman.Map = function (size) {
   function drawWall(ctx) {
     var i, j, p, line;
 
-    ctx.strokeStyle = "#0000FF";
-    ctx.lineWidth = 5;
+    ctx.strokeStyle = "#0e26b5";
+    ctx.lineWidth = 10;
     ctx.lineCap = "round";
 
     for (i = 0; i < Pacman.WALLS.length; i += 1) {
