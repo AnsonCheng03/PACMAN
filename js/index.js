@@ -13,14 +13,23 @@ var state = WAITING,
   ghostSpecs = [
     {
       // img: "./img/ghost_1.png",
-      home: { x: 8, y: 5 },
+      home: {
+        x: Math.floor(Pacman.MAP[0].length / 2) - 1,
+        y: Math.floor(Pacman.MAP.length / 2),
+      },
     },
     {
       // img: "./img/ghost_2.png",
-      home: { x: 11, y: 5 },
+      home: {
+        x: Math.floor(Pacman.MAP[0].length / 2),
+        y: Math.floor(Pacman.MAP.length / 2),
+      },
     },
   ],
-  userHomePos = { x: 10, y: 9 },
+  userHomePos = {
+    x: Math.floor(Pacman.MAP[0].length / 2),
+    y: Pacman.MAP.length - 2,
+  },
   eatenCount = 0,
   level = 0,
   tick = 0,
