@@ -35,7 +35,19 @@ Pacman.User = function (game, map, homePos) {
       const hint = document.querySelectorAll(".Hint")[0];
       hint.style.display = "flex";
       document.querySelector(".showHint").style.display = "none";
-      hint.innerHTML = `<div class="container"><img src="./img/gamesucessful.svg" alt="You Win" /></div>`;
+      // hint.innerHTML = `<div class="container"><video src="./img/Final_Video__Win_.mp4" alt="You Win" /></div>`;
+      hint.innerHTML = "";
+      const container = document.createElement("div");
+      container.classList.add("container");
+      const video = document.createElement("video");
+      video.src = "./img/Final_Video__Win_.mp4";
+      video.autoplay = true;
+      // video.loop = true;
+      // video.muted = true;
+      video.style.width = "100%";
+      video.style.height = "100%";
+      container.appendChild(video);
+      hint.appendChild(container);
       submitSCORM(true);
     }
   }
