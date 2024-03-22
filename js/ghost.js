@@ -133,11 +133,16 @@ Pacman.Ghost = function (game, map, ghostSpec) {
     if (ghostSpec.img) {
       const ghostImg = new Image();
       ghostImg.src = ghostSpec.img;
+      console.log(ghostImg.height, ghostImg.width);
+      const ghostWidth =
+        ghostImg.width > ghostImg.height
+          ? s
+          : s * (ghostImg.width / ghostImg.height);
       ctx.drawImage(
         ghostImg,
-        (position.x / 10) * s,
+        (position.x / 10) * s - (ghostWidth - s) / 2,
         (position.y / 10) * s,
-        s,
+        ghostWidth,
         s
       );
       return;

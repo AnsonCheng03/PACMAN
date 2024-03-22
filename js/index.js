@@ -12,14 +12,14 @@ var state = WAITING,
   ghosts = [],
   ghostSpecs = [
     {
-      // img: "./img/ghost_1.png",
+      img: "./img/ghost_1.svg",
       home: {
         x: Math.floor(Pacman.MAP[0].length / 2) - 1,
         y: Math.floor(Pacman.MAP.length / 2),
       },
     },
     {
-      // img: "./img/ghost_2.png",
+      img: "./img/ghost_2.svg",
       home: {
         x: Math.floor(Pacman.MAP[0].length / 2),
         y: Math.floor(Pacman.MAP.length / 2),
