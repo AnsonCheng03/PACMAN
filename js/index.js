@@ -33,6 +33,7 @@ var state = WAITING,
   eatenCount = 0,
   level = 0,
   tick = 0,
+  retryCount = 0,
   ghostPos,
   userPos,
   stateChanged = true,
@@ -246,6 +247,20 @@ function mainDraw() {
   }
 }
 
+function retryOnFail() {
+  const hint = document.querySelectorAll(".Hint")[0];
+  hint.style.display = "none";
+  document.querySelector(".showHint").style.display = "flex";
+  hint.innerHTML = `<div class="container"><h1>Hint</h1><p>Use the arrow keys to move Pacman around the maze and eat all the dots. Avoid the ghosts. If you eat a power pill, you can eat the ghosts! Good luck!</p><ul></ul><button onclick="hintButtonClicked();">Got it!</button></div>`;
+  initGame();
+  // make .Hint .container img width: 1rem;
+  document.querySelectorAll(".Hint .container img").forEach((img) => {
+    img.style.width = "1rem";
+  });
+  startNewGame();
+  showHint();
+}
+
 function mainLoop() {
   var diff;
 
@@ -264,7 +279,7 @@ function mainLoop() {
     const hint = document.querySelectorAll(".Hint")[0];
     hint.style.display = "flex";
     document.querySelector(".showHint").style.display = "none";
-    hint.innerHTML = `<div class="container"><img src="./img/gameover.svg" alt="Game Over" /><button onclick="location.reload();">Retry</button></div>`;
+    hint.innerHTML = `<div class="container"><img src="./img/gameover.svg" alt="Game Over" /><button onclick="retryOnFail()">Retry</button></div>`;
     submitSCORM(false);
   } else if (state === EATEN_PAUSE && tick - timerStart > Pacman.FPS / 3) {
     map.draw(ctx);
@@ -420,30 +435,33 @@ function showHint() {
 }
 
 function submitSCORM(win) {
-  let i = 0;
   const AnswerSet = Object.values(Pacman.AnswerSet);
-  AnswerSet.forEach((element) => {
-    SCOSetValue(
-      `cmi.interactions.${i}.id`,
-      `${element.Description} (${element.correct ? "" : "in"}correct)`
-    );
-    SCOSetValue(`cmi.interactions.${i}.type`, "fill-in");
-    SCOSetValue(
-      `cmi.interactions.${i}.student_response`,
-      `${element.eaten ? "eaten" : "not eaten"}`
-    );
-    SCOSetValue(
-      `cmi.interactions.${i}.result`,
-      `${
-        (element.correct && element.eaten) ||
-        (!element.correct && !element.eaten)
-          ? "correct"
-          : "wrong"
-      }`
-    );
-    i++;
-  });
+  SCOSetValue(
+    `cmi.interactions.${retryCount}.id`,
+    `Attempt ${retryCount} [Correct Answer: ${AnswerSet.filter(
+      (element) => element.correct
+    )
+      .map((element) => element.Description)
+      .join(", ")}]`
+  );
+  SCOSetValue(`cmi.interactions.${retryCount}.type`, "fill-in");
+  SCOSetValue(
+    `cmi.interactions.${retryCount}.student_response`,
+    `${AnswerSet.filter((element) => element.eaten)
+      .map((element) => element.Description)
+      .join(", ")}`
+  );
+  SCOSetValue(
+    `cmi.interactions.${retryCount}.result`,
+    `${
+      AnswerSet.filter((element) => element.correct && element.eaten).length ===
+      AnswerSet.filter((element) => element.correct).length
+        ? "correct"
+        : "wrong"
+    }`
+  );
+  retryCount += 1;
   SCOSetValue("cmi.core.score.raw", win ? 100 : 0);
-  SCOSetValue("cmi.core.score.max", AnswerSet.length);
-  SCOSetValue("cmi.core.lesson_status", "completed");
+  SCOSetValue("cmi.core.score.max", 100);
+  if (win) SCOSetValue("cmi.core.lesson_status", "completed");
 }
