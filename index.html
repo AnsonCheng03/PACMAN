@@ -151,17 +151,28 @@
     <ul>
     </ul>
     <button onclick="hintButtonClicked();">Got it!</button>
-    <button class="showHint" onclick="showHint();">?</button>
+  </div>
+  <button class="showHint" onclick="showHint();">?</button>
 
-    <script src="js/environment.js"></script>
-    <script src="js/ghost.js"></script>
-    <script src="js/user.js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/index.js"></script>
+  <script src="js/environment.js"></script>
+  <script src="js/ghost.js"></script>
+  <script src="js/user.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/index.js"></script>
 
-    <script>
-      initGame();
-    </script>
+  <script>
+    if (SCOGetValue("cmi.core.lesson_status") === "completed") {
+      // clear body
+      document.body.innerHTML = "";
+      // create a new div
+      var div = document.createElement("div");
+      div.className = "Hint";
+      div.innerHTML = "<h1>Game Over</h1><p>You have completed the game.</p><button onclick='window.close();'>Close</button>";
+      // append the div to the body
+      document.body.appendChild(div);
+    }
+    initGame();
+  </script>
 
 </body>
 
