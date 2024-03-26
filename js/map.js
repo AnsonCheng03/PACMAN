@@ -15,11 +15,11 @@ const Answers = [
 ];
 
 AnswerImages = [
-  "./img/pacman-apple.png",
-  "./img/pacman-cherry.png",
-  "./img/pacman-orange.png",
-  "./img/pacman-strawbarry.png",
-  "./img/pacman-banana.png",
+  "./img/pacman-fruit-1.svg",
+  "./img/pacman-fruit-2.svg",
+  "./img/pacman-fruit-3.svg",
+  "./img/pacman-fruit-4.svg",
+  "./img/pacman-fruit-5.svg",
 ];
 
 Pacman.AnswerSet = Answers.sort(() => Math.random() - 0.5).reduce(
@@ -260,18 +260,21 @@ Pacman.Map = function (size) {
               (answer) => answer.MapValue === map[i][j]
             ).Image
           ) {
-            // import image
             const img = new Image();
             img.src = Object.values(Pacman.AnswerSet).find(
               (answer) => answer.MapValue === map[i][j]
             ).Image;
-
+            const fruitWidth =
+              img.width > img.height
+                ? blockSize
+                : blockSize * (img.width / img.height);
+            // make it smaller (0.8x)
             ctx.drawImage(
               img,
-              j * blockSize,
-              i * blockSize,
-              blockSize,
-              blockSize
+              j * blockSize + blockSize * 0.1 - (fruitWidth - blockSize) / 2,
+              i * blockSize + blockSize * 0.1,
+              fruitWidth * 0.8,
+              blockSize * 0.8
             );
           } else {
             ctx.fillStyle = "#FFF";
